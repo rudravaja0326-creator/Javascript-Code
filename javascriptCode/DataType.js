@@ -3,7 +3,12 @@ const MobileNo = 9874561230; //Const Number
 let Name = "Rudra"; //String
 let Value = null; //Null
 let gmailid;
+
 //DataType in js
+
+
+console.log(typeof Value);
+console.log(bigint);
 
 // Number
 // Bigint
