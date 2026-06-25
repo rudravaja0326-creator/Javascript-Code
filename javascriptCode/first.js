@@ -7,8 +7,8 @@ let AccountName = "Rudra";
 //let can be change when runtime or inline
 
 
-CityName = "Bhavnagar";
-let emailid;
+CityName = "Bhavnagar";//its define as variable
+let emailid;// it set as undefine varible
 
 
 
