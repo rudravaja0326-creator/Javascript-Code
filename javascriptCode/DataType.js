@@ -7,9 +7,6 @@ let gmailid;
 //DataType in js
 
 
-console.log(typeof Value);
-console.log(bigint);
-
 // Number
 // Bigint
 // String
