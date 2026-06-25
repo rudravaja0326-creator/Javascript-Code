@@ -6,11 +6,8 @@ const UserID = 124578;
 let AccountName = "Rudra";
 //let can be change when runtime or inline
 
-
 CityName = "Bhavnagar";//its define as variable
 let emailid;// it set as undefine varible
-
-
 
 
 var AccountPassword = 4165487;
