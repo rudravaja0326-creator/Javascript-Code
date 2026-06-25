@@ -1,3 +1,7 @@
 console.log("HELLO Rudra");
 
-javascript code
+
+comsole.log("My name is rudra vaja");
+
+
+
