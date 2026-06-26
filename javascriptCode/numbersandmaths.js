@@ -14,7 +14,7 @@ console.log(exampleofNumber.toFixed(2));
 
 const perosicion = 1478.4545;
 
-console.log(perosicion.toPrecision(5));//ouput 1478.4er+//Number method that formats a number to a specified number of significant digits and returns the result as a string.
+console.log(perosicion.toPrecision(5)); //ouput 1478.4er+we//Number method that formats a number to a specified number of significant digits and returns the result as a string.
 
 const CountMoney = 1000000;
 
@@ -24,9 +24,9 @@ console.log(CountMoney.toLocaleString("en-in")); //Output 10,00,000 ('en-in')use
 
 const MathFun = -12.4589;
 
-console.log(MathFun, Math.abs(MathFun));//convert nagative to positive to nagative
+console.log(MathFun, Math.abs(MathFun)); //convert nagative to positive to nagative
 console.log(Math.round(MathFun)); //Roundfigure of given value
-console.log(Math.floor(MathFun));//remove decimal value and give integer value
+console.log(Math.floor(MathFun)); //remove decimal value and give integer value
 console.log(Math.ceil(MathFun));
 console.log("Min Value is:", Math.min(4, 5, 8, 6, 99));
 console.log("Max Value is:", Math.max(4, 5, 8, 6, 99));
