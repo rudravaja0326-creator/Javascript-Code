@@ -48,17 +48,3 @@ const myn2 = myArr.splice(1, 3);
 console.log("C ", myArr); // C [0, 4, 5]
 console.log(myn2); // [1, 2, 3]
 console.log(myArr); // [0, 4, 5]
-
-
-
-const arr = [1, 2, 3];
-
-console.log(Array.isArray(arr)); //Checks whether a value is an array and returns true or false.
-
-console.log(Array.from("rudravaja")); //Output ['r', 'u', 'd', 'r', 'a', 'v', 'a', 'j', 'a'].
-
-let Array_new = 100;
-let Array_new1 = 200;
-let Array_new2 = 300;
-
-console.log(Array.of(Array_new, Array_new1, Array_new2));//make array of Differant elements.
