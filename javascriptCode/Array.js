@@ -15,13 +15,13 @@ console.log(Arry);
 
 Arry.pop()
 console.log(Arry);
-const Array = [10, 20, 30];
+const Array1 = [10, 20, 30];
 
-console.log("10 is Here:",Array.includes(20));//return true or false, if that value have in that array
-console.log("index is:",Array.indexOf(20));//return index number to given element value.
+console.log("10 is Here:",Array1.includes(20));//return true or false, if that value have in that array
+console.log("index is:",Array1.indexOf(20));//return index number to given element value.
 
-console.log(Array.pop());//ouput was 30 show that 30 was pop
-console.log(Array);//Output is [10,20]
+console.log(Array1.pop());//ouput was 30 show that 30 was pop
+console.log(Array1);//Output is [10,20]
 
 Arry.unshift(9);//add element in starting position
 
@@ -33,7 +33,8 @@ console.log(Arry);//output is [0,1,2,3,4]
 Arry.shift();
 console.log(Arry);
 
-const myArr = [0,1,2,3,4,5]
+const myArr = [0, 1, 2, 3, 4, 5];
+
 
 console.log("A ", myArr); // A [0, 1, 2, 3, 4, 5]
 
@@ -42,8 +43,22 @@ const myn1 = myArr.slice(1, 3)
 console.log(myn1); // [1, 2]
 console.log("B ", myArr); // B [0, 1, 2, 3, 4, 5]
 
-const myn2 = myArr.splice(1, 3)
+const myn2 = myArr.splice(1, 3);
 
 console.log("C ", myArr); // C [0, 4, 5]
 console.log(myn2); // [1, 2, 3]
 console.log(myArr); // [0, 4, 5]
+
+
+
+const arr = [1, 2, 3];
+
+console.log(Array.isArray(arr)); //Checks whether a value is an array and returns true or false.
+
+console.log(Array.from("rudravaja")); //Output ['r', 'u', 'd', 'r', 'a', 'v', 'a', 'j', 'a'].
+
+let Array_new = 100;
+let Array_new1 = 200;
+let Array_new2 = 300;
+
+console.log(Array.of(Array_new, Array_new1, Array_new2));//make array of Differant elements.
