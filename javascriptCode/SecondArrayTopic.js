@@ -43,4 +43,4 @@ let Array_new2 = 300;
 console.log(Array.of(Array_new, Array_new1, Array_new2));//make array of Differant elements.
 
 
-
+//create a website for marvel heroes to downlode an image of every marvel charchter and their realnamw and their details both real details or marvel charchter details using html and css look like profesonal look and color them.
