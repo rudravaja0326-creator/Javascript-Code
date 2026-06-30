@@ -53,10 +53,11 @@ function handleObject(anyobject){
 }
 
 // handleObject(user);
-handleObject({//direct created object.
-    username:"Rudra",
-    price:500
-})
+handleObject({
+  //direct created object.
+  username: "Rudra",
+  price: 500,
+});
 
 const newarray = [1,8,6,9,6];
 
