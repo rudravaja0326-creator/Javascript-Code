@@ -143,18 +143,28 @@ const objarray = [
   }
 ];
 
-console.log(objarray);
+// console.log(objarray);
 
 
+// let same = objarray.filter((ti)=>{//filter() is used when you want to select only some elements that match a condition.
+//     if(ti.genre === "Programming"){
+//     console.log(ti.genre);
+//     }
+// })
 
+// same = objarray.filter(gi=>gi.publish >= 2022)
+// console.log(same);
 
+const objarray1 = [1,2,3,4,5,6];
 
-let same = objarray.filter((ti)=>{
-    if(ti.genre === "Programming"){
-    console.log(ti.genre);
-    }
-})
+const maper = objarray.map((value)=>{//map() is used when you want to modify/transform every element of an array and create a new array.
+    console.log(value);
+    // return value+index;
+});
 
-same = objarray.filter(gi=>gi.publish >= 2022)
-console.log(same);
+const numbers = [1, 2, 3, 4];
 
+const doubled = numbers.map(num => num * 2);
+
+console.log(doubled);
+console.log(numbers);
