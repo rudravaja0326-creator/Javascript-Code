@@ -162,9 +162,23 @@ const maper = objarray.map((value)=>{//map() is used when you want to modify/tra
     // return value+index;
 });
 
+
+// const doubled = numbers.map(num => num * 2);
+
+// console.log(doubled);
+// console.log(numbers);
+
+
+//reduce() is an array method that takes all elements of an array and combines them into a single value.
+
 const numbers = [1, 2, 3, 4];
 
-const doubled = numbers.map(num => num * 2);
+// let redcueexample = numbers.reduce((accumaltor,current)=>{
+//   console.log(`Accumalotor value:${accumaltor} Current value ${current}`);
+//           return accumaltor + current;
+// },
+// 0);
 
-console.log(doubled);
-console.log(numbers);
+// console.log(redcueexample);
+let redcueexample = numbers.reduce((accu , curru)=>(accu+curru),0);
+console.log(redcueexample);
