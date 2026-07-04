@@ -180,5 +180,5 @@ const numbers = [1, 2, 3, 4];
 // 0);
 
 // console.log(redcueexample);
-let redcueexample = numbers.reduce((accu , curru)=>(accu+curru),0);
-console.log(redcueexample);
+let redcueexample1 = numbers.reduce((accu1 , curr1)=>(accu1+curr1));
+console.log(redcueexample1);
