@@ -43,11 +43,11 @@
 // It does not understand HTML tags.
 
 //<div id="box">
-//  Hello
+//Hello
 //<span style="display:none;">World</span>
 //</div>
-// console.log(
-//    document.getElementById("box").textContent
+//console.log(
+//document.getElementById("box").textContent
 //);
-// Output :Hello World
-// ============================================================================
+//Output:Hello World
+//============================================================================
