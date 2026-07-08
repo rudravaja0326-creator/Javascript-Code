@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Changes</title>
+
+
+<style>
+*{
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.parent{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.button{
+            height: 200px;
+            width: 200px;
+            cursor:pointer;
+}
+#red{
+    background-color: red;
+}
+#blue{
+    background-color: blue;
+}
+#yellow{
+    background-color: yellow;
+}
+#grey{
+    background-color: grey;
+}
+.button:hover{
+    height: 200px;
+    width: 210px;
+    transition: all 0.5s ease-in-out;
+    border:none;
+}
+.container p {
+    text-transform: capitalize;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+<h1>Color Schems SwiTcher</h1>
+      <div class="parent">
+      <button class="button" id="red"></button>
+      <button class="button" id="blue"></button>
+      <button class="button" id="yellow"></button>
+      <button class="button" id="grey"></button>
+     </div>
+<p>try clicking on one of the colors above to change the background color  of this page!</p>
+
+</div>
+</body>
+<script>
+    const buttons = document.querySelectorAll('.button');
+const body = document.querySelector('body');
+
+//querySelectorAll make an nodelist.
+
+buttons.forEach(function(button){
+    console.log(button);
+button.addEventListener('click',function(e){
+    // console.log(e.target);
+    if(e.target.id === 'red'){
+              body.style.backgroundColor = e.target.id;
+              e.target.style.backgroundColor = 'white';
+    }
+    if(e.target.id === 'blue'){
+              body.style.background = e.target.id;
+              e.target.style.backgroundColor = 'white';
+    }
+    if(e.target.id === 'yellow'){
+              body.style.background = e.target.id;
+              e.target.style.backgroundColor = 'white';
+    }
+    if(e.target.id === 'grey'){
+              body.style.background = e.target.id;
+              e.target.style.backgroundColor = 'white';
+    }
+});
+});
+
+
+
+
+</script>
+</html>
