@@ -18,18 +18,17 @@
     <script>
         document.querySelector('#naruto').addEventListener('click',function(e){
             console.log("Hello");
+            e.stopPropagation();//Stops the event from reaching parent elements.
             naruto.style.width = '500px';
-        },false);
+        },true);
         
         document.querySelector('ul').addEventListener('click',function(e){
             console.log("UL");
-            e.stopPropagation();//stopPropagation() stops an event from bubbling up (or propagating) to parent elements.
+            e.preventDefault();//stopPropagation() Stops the browser's default action , stops an event from bubbling up (or propagating) to parent elements.
             naruto.style.width = '500px';
         },false);//bubbling
-        
-        
+          
     
     </script>
-
 
 </html>
