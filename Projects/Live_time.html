@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time live</title>
+  </head>
+  <style>
+    * {
+      text-align: center;
+      background-color:rgb(235, 235, 189);  
+    }
+    body {
+      margin-top: 36vh;
+    }
+    button{
+        border: none;
+        background-color: rgb(245, 250, 255);
+        padding: 10px;
+    }
+  </style>
+  <body>
+    <h2 id="header">This is Live time</h2>
+    <h5 id="display"></h5>
+    <button id="start">START</button>
+    <button id="stop">STOP</button>
+  </body>
+
+  <script>
+        const header = document.querySelector("#header");
+        const start = document.querySelector("#start");
+        const stop = document.querySelector("#stop");
+        const display = document.querySelector('#display');
+        let interval;
+
+        start.addEventListener("click", () => {
+            if (interval) return;
+            interval = setInterval(()=>{
+                display.innerHTML =(`Live time is     ${new Date().toLocaleTimeString()}`);
+                header.innerHTML = "India Timeline"
+            },1000)
+        });
+
+    stop.addEventListener('click',()=>{
+        clearInterval(interval);
+        interval=null;
+        display.innerHTML = "Stoped";
+    });
+  </script>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color changes background</title>
+  </head>
+
+  <style>
+    * {
+      text-align: center;
+    }
+    body {
+      margin-top: 25vh;
+    }
+  </style>
+
+  <body>
+    <h1 class="header">This is BackgroundColor Changes Page</h1>
+
+    <button class="start">Start</button>
+    <button class="stop">Stop</button>
+  </body>
+
+ <script>
+    const start = document.querySelector('.start');
+    const stop = document.querySelector('.stop');
+    let body = document.querySelector('body')
+
+    const randomcolor = function(){
+        const hex = '0123456789ADBCDEF';
+        let color = '#';
+        for(let i = 0 ; i < 6 ; i++){
+            color += hex[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    
+    let variablerandom;
+
+start.addEventListener('click',()=>{
+    if(variablerandom) return;
+        variablerandom = setInterval(()=>{
+            body.style.backgroundColor = randomcolor();
+        },400)
+
+});
+
+
+stop.addEventListener('click',()=>{
+        clearInterval(variablerandom);
+        variablerandom = null;
+});
+
+</script> 
+<!-- <script>const start = document.querySelector('.start');
+const stop = document.querySelector('.stop');
+const body = document.querySelector('body');
+
+const randomcolor = function () {
+    const hex = '0123456789ABCDEF';
+    let color = '#';
+
+    for (let i = 0; i < 6; i++) {
+        color += hex[Math.floor(Math.random() * 16)];
+    }
+
+    return color;
+};
+
+let variablerandom;
+
+start.addEventListener('click', function () {
+    if(variablerandom) return;
+    variablerandom = setInterval(function () {
+        body.style.backgroundColor = randomcolor();
+    }, 1000);
+});
+
+stop.addEventListener('click', function () {
+    clearInterval(variablerandom);
+    variablerandom = null;
+});</script> -->
+
+</html>
