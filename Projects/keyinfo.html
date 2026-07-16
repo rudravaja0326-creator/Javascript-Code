@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Keyinformation page</title>
+  </head>
+  <style>
+    * {
+      background-color: #121212;
+      text-align: center;
+      color: whitesmoke;
+    }
+    table{
+        width: 50%;
+        height: 20px;
+        margin: auto;
+    }
+    th,
+    td {
+      border: 1px solid rgb(255, 255, 255);
+    }
+    body {
+      font-family: "Poppins", sans-serif;
+      font-weight: 500;
+      margin-top: 36vh;
+      text-transform: capitalize;
+      font-size: 2vw;
+    }
+  </style>
+  <body>
+    <div class="insert">
+      <div class="key">Press any key and see the magic</div>
+    </div>
+  </body>
+
+  <script>
+    const insert = document.querySelector(".insert");
+
+    window.addEventListener("keydown", (e) => {
+      insert.innerHTML = `<table>
+  <tr>
+    <th>Key</th>
+    <th>Keycode</th>
+    <th>Code</th>
+  </tr>
+  <tr>
+    <td>${e.key === ' ' ? 'Space' : e.key}</td>
+    <td>${e.keyCode}</td>
+    <td>${e.code}</td>
+  </tr>
+</table>`;
+    });
+  </script>
+</html>

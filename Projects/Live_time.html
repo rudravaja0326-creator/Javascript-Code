@@ -36,8 +36,8 @@
         start.addEventListener("click", () => {
             if (interval) return;
             interval = setInterval(()=>{
-                display.innerHTML =(`Live time is     ${new Date().toLocaleTimeString()}`);
-                header.innerHTML = "India Timeline"
+                display.innerHTML =(`Live time is ${new Date().toLocaleTimeString()}`);
+                header.innerHTML = "India Timeline";
             },1000)
         });
 
