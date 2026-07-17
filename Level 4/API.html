@@ -16,7 +16,7 @@
                 htmlreq.onreadystatechange = function(){
                      console.log(htmlreq.readyState);
                      if(htmlreq.readyState === 4){
-                        const data = JSON.parse(this.responseText);//RESPONSETEXT IS PREDEFINE API KEYWORD.
+                        const data = JSON.parse(this.responseText);//RESPONSETEXT IS PREDEFINE API OBJECT.
                         console.log(typeof data);
                         console.log(data.name);
                         console.log(data.weight);
