@@ -15,3 +15,20 @@ function called(name,id){
 informationofcompany(called);
 
 
+
+function firstfunction(callback) {
+    console.log("This is firstfunction");
+    callback("rudra", 789456);
+}
+
+function secondfunction(name, id) {
+    console.log(name, id);
+    console.log("second function");
+}
+
+firstfunction(secondfunction);
+
+1
+
+1
+

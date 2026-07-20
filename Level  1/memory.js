@@ -1,24 +1,25 @@
-//Javascript have 2 types of memory
+// //Javascript have 2 types of memory
 
-// Primitive :-> NumBer(Int) , Bigint , string , null , boolean , Symbol
-//Non primitive :->  Array , Object , function
+// // Primitive :-> NumBer(Int) , Bigint , string , null , boolean , Symbol
+// //Non primitive :->  Array , Object , function
 
-// i) Stack (Premitive) ii)Heap (Primitive)
+// // i) Stack (Premitive) ii)Heap (Primitive)
 
-var one = "Rudra";
-console.log("My name is",one);
+// var one = "Rudra";
+// console.log("My name is",one);
 
-var two = "Vaja";
-console.log(two);
+// var two = "Vaja";
+// console.log(two);
 
-var child = two;
-console.log(child);
+// var child = two;
+// console.log(child);
 
-two = "JS";
-console.log(two);
+// two = "JS";
+// console.log(two);
 
-undefinedvar = 45;
+// undefinedvar = 45;
 
-console.log(undefinedvar);
+// console.log(undefinedvar);
+
 
 
