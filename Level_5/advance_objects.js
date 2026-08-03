@@ -11,6 +11,7 @@ const hey = {
     }
 }
 
+
 console.log(hey);
 
 hey.name = "rudra vaja";
