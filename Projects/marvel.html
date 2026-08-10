@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARVEL FILES — Character Database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12172B;
+    --bg-panel: #171D35;
+    --bg-card: #1B2240;
+    --ink: #EDEFF7;
+    --ink-dim: #9AA3C4;
+    --ink-faint: #5C6390;
+    --line: #2A3155;
+
+    --avengers: #E4572E;
+    --xmen: #F2B705;
+    --guardians: #06A77D;
+    --villain: #8B5CF6;
+    --solo: #3E8EDE;
+
+    --radius: 14px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      radial-gradient(circle at 8% 4%, rgba(228,87,46,0.10), transparent 32%),
+      radial-gradient(circle at 92% 12%, rgba(242,183,5,0.08), transparent 30%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* halftone texture strip */
+  .halftone{
+    position:absolute; inset:0; pointer-events:none;
+    background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+    background-size: 14px 14px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+  }
+
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    position:relative;
+    overflow:hidden;
+    padding: 64px 6vw 46px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.18em;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px;
+    background:var(--avengers);
+    border-radius:2px;
+    display:inline-block;
+  }
+
+  h1.title{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    font-size:clamp(42px, 8vw, 96px);
+    line-height:0.92;
+    letter-spacing:0.01em;
+    text-transform:uppercase;
+    max-width:900px;
+  }
+  h1.title .accent{
+    color:var(--avengers);
+    -webkit-text-stroke: 1.5px rgba(237,239,247,0.15);
+  }
+
+  .hero-sub{
+    max-width:560px;
+    margin-top:22px;
+    color:var(--ink-dim);
+    font-size:15.5px;
+    line-height:1.65;
+  }
+
+  .stat-row{
+    display:flex;
+    gap:36px;
+    margin-top:40px;
+    flex-wrap:wrap;
+  }
+  .stat{
+    font-family:'JetBrains Mono', monospace;
+  }
+  .stat .num{
+    font-size:26px;
+    font-weight:700;
+    display:block;
+  }
+  .stat .lbl{
+    font-size:11px;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+  }
+  .stat.av .num{color:var(--avengers);}
+  .stat.xm .num{color:var(--xmen);}
+  .stat.gu .num{color:var(--guardians);}
+  .stat.vi .num{color:var(--villain);}
+
+  /* ---------- CONTROLS ---------- */
+  .controls{
+    position:sticky; top:0; z-index:20;
+    background:rgba(18,23,43,0.88);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:18px 6vw;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+
+  .search-wrap{
+    position:relative;
+    flex:1 1 260px;
+    max-width:380px;
+  }
+  .search-wrap svg{
+    position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    width:16px; height:16px; opacity:0.45;
+  }
+  #search{
+    width:100%;
+    padding:11px 14px 11px 38px;
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  #search:focus{border-color:var(--ink-faint);}
+  #search::placeholder{color:var(--ink-faint);}
+
+  .filters{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:8px 14px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--ink-dim);
+    cursor:pointer;
+    transition: all .15s ease;
+    white-space:nowrap;
+  }
+  .chip:hover{color:var(--ink); border-color:var(--ink-faint);}
+  .chip.active{
+    background:var(--chip-color, var(--ink));
+    color:#0C0F1C;
+    border-color:transparent;
+    font-weight:700;
+  }
+  .count-tag{
+    margin-left:auto;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ink-faint);
+  }
+
+  /* ---------- GRID ---------- */
+  main{
+    padding: 36px 6vw 90px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(252px, 1fr));
+    gap:20px;
+  }
+
+  .card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:0;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    border-color: var(--card-color, var(--ink-faint));
+    box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
+  }
+  .card:focus-visible{
+    outline:2px solid var(--card-color, var(--ink));
+    outline-offset:2px;
+  }
+
+  .card-top{
+    position:relative;
+    height:150px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--card-color) 35%, transparent), transparent 60%),
+      linear-gradient(160deg, color-mix(in srgb, var(--card-color) 22%, var(--bg-panel)), var(--bg-panel));
+    border-bottom:1px solid var(--line);
+  }
+  .card-top .halftone{background-size:10px 10px;}
+
+  .issue-tag{
+    position:absolute; top:10px; left:12px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    color:var(--ink-faint);
+    letter-spacing:0.06em;
+  }
+  .aff-tag{
+    position:absolute; top:10px; right:12px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:9.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    border-radius:20px;
+    background: color-mix(in srgb, var(--card-color) 28%, transparent);
+    color: var(--card-color);
+    border:1px solid color-mix(in srgb, var(--card-color) 55%, transparent);
+    font-weight:700;
+  }
+
+  .emblem{
+    width:72px; height:72px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+  }
+
+  .card-body{
+    padding:16px 18px 18px;
+  }
+  .name{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    font-size:21px;
+    letter-spacing:0.01em;
+    text-transform:uppercase;
+    margin-bottom:2px;
+  }
+  .real-name{
+    font-size:12px;
+    color:var(--ink-faint);
+    font-family:'JetBrains Mono', monospace;
+    margin-bottom:12px;
+  }
+  .power-line{
+    font-size:13px;
+    color:var(--ink-dim);
+    line-height:1.5;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    margin-bottom:12px;
+    min-height:39px;
+  }
+  .movie-tag{
+    font-size:11px;
+    font-family:'JetBrains Mono', monospace;
+    color: var(--card-color);
+    border-top:1px dashed var(--line);
+    padding-top:10px;
+  }
+
+  .empty-state{
+    grid-column:1/-1;
+    text-align:center;
+    padding:70px 20px;
+    color:var(--ink-faint);
+  }
+  .empty-state .big{
+    font-family:'Anton', sans-serif;
+    font-size:26px;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:8px;
+  }
+
+  /* ---------- MODAL ---------- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(8,10,20,0.72);
+    backdrop-filter:blur(4px);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:6vh 20px;
+    overflow-y:auto;
+    z-index:100;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .overlay.open{opacity:1; pointer-events:auto;}
+
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    max-width:560px;
+    width:100%;
+    overflow:hidden;
+    transform:translateY(14px) scale(0.98);
+    transition:transform .22s ease;
+  }
+  .overlay.open .modal{transform:translateY(0) scale(1);}
+
+  .modal-hero{
+    position:relative;
+    height:200px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(circle at 30% 15%, color-mix(in srgb, var(--card-color) 40%, transparent), transparent 65%),
+      linear-gradient(160deg, color-mix(in srgb, var(--card-color) 26%, var(--bg-panel)), var(--bg-panel));
+    border-bottom:1px solid var(--line);
+  }
+  .modal-hero .emblem{width:110px; height:110px;}
+  .modal-close{
+    position:absolute; top:14px; right:14px;
+    width:34px; height:34px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.35);
+    border:1px solid rgba(255,255,255,0.12);
+    color:var(--ink);
+    font-size:16px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: background .15s ease;
+  }
+  .modal-close:hover{background:rgba(0,0,0,0.55);}
+
+  .modal-aff{
+    position:absolute; top:14px; left:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:20px;
+    background: color-mix(in srgb, var(--card-color) 28%, transparent);
+    color: var(--card-color);
+    border:1px solid color-mix(in srgb, var(--card-color) 55%, transparent);
+    font-weight:700;
+  }
+
+  .modal-body{padding:26px 28px 30px;}
+  .modal-name{
+    font-family:'Anton', sans-serif;
+    font-size:32px;
+    text-transform:uppercase;
+    line-height:1;
+  }
+  .modal-real{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--card-color);
+    margin-top:6px;
+    margin-bottom:22px;
+  }
+
+  .field{margin-bottom:18px;}
+  .field-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:6px;
+  }
+  .field-value{
+    font-size:14.5px;
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .movie-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+  }
+  .movie-chip{
+    font-size:12px;
+    padding:6px 11px;
+    border-radius:8px;
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    color:var(--ink-dim);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:26px 6vw 40px;
+    color:var(--ink-faint);
+    font-size:12px;
+    font-family:'JetBrains Mono', monospace;
+    line-height:1.7;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; scroll-behavior:auto !important;}
+  }
+
+  @media (max-width:640px){
+    .stat-row{gap:22px;}
+    .controls{padding:14px 5vw;}
+    main{padding:28px 5vw 70px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="halftone"></div>
+  <div class="eyebrow">Classified Personnel File · Vol. 1</div>
+  <h1 class="title">MARVEL <span class="accent">FILES</span></h1>
+  <p class="hero-sub">A field database of heroes, villains, and everyone in between — real identities, screen debuts, and the powers that got them there. Click any file to open the dossier.</p>
+
+  <div class="stat-row">
+    <div class="stat av"><span class="num" id="stat-av">0</span><span class="lbl">Avengers</span></div>
+    <div class="stat xm"><span class="num" id="stat-xm">0</span><span class="lbl">X-Men</span></div>
+    <div class="stat gu"><span class="num" id="stat-gu">0</span><span class="lbl">Guardians</span></div>
+    <div class="stat vi"><span class="num" id="stat-vi">0</span><span class="lbl">Villains</span></div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search" type="text" placeholder="Search name, alias, movie…">
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="count-tag" id="count-tag"></div>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  MARVEL FILES — a fan-made reference project. Characters &amp; likenesses © Marvel Studios / The Walt Disney Company. Emblems here are original illustrations, not stills or official artwork. Built with HTML, CSS &amp; JS.
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const CHARACTERS = [
+  {name:"Iron Man", real:"Tony Stark", aff:"avengers", color:"var(--avengers)",
+    movie:"Iron Man (2008)", movies:["Iron Man (2008)","Iron Man 2 (2010)","The Avengers (2012)","Iron Man 3 (2013)","Avengers: Age of Ultron (2015)","Captain America: Civil War (2016)","Spider-Man: Homecoming (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"Genius-level engineer in a powered exoskeleton suit — repulsor blasts, flight, and an arsenal that upgrades every film.",
+    icon:"arc"},
+  {name:"Captain America", real:"Steve Rogers", aff:"avengers", color:"var(--avengers)",
+    movie:"Captain America: The First Avenger (2011)", movies:["Captain America: The First Avenger (2011)","The Avengers (2012)","Captain America: The Winter Soldier (2014)","Avengers: Age of Ultron (2015)","Captain America: Civil War (2016)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"Super-soldier serum grants peak human strength, speed, and endurance. Fights with an indestructible vibranium shield.",
+    icon:"shield"},
+  {name:"Thor", real:"Thor Odinson", aff:"avengers", color:"var(--avengers)",
+    movie:"Thor (2011)", movies:["Thor (2011)","The Avengers (2012)","Thor: The Dark World (2013)","Avengers: Age of Ultron (2015)","Thor: Ragnarok (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Thor: Love and Thunder (2022)"],
+    power:"Asgardian god of thunder — commands lightning, super-strength, and flight, wielding the enchanted hammer Mjolnir (and later, Stormbreaker).",
+    icon:"bolt"},
+  {name:"Hulk", real:"Bruce Banner", aff:"avengers", color:"var(--avengers)",
+    movie:"The Incredible Hulk (2008)", movies:["The Incredible Hulk (2008)","The Avengers (2012)","Avengers: Age of Ultron (2015)","Thor: Ragnarok (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"Gamma radiation transforms Banner into a nearly unstoppable giant of raw strength whenever rage takes over.",
+    icon:"burst"},
+  {name:"Black Widow", real:"Natasha Romanoff", aff:"avengers", color:"var(--avengers)",
+    movie:"Iron Man 2 (2010)", movies:["Iron Man 2 (2010)","The Avengers (2012)","Captain America: The Winter Soldier (2014)","Avengers: Age of Ultron (2015)","Captain America: Civil War (2016)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Black Widow (2021)"],
+    power:"Elite Red Room-trained spy and assassin — master of hand-to-hand combat, infiltration, and improvisation with zero superpowers.",
+    icon:"hourglass"},
+  {name:"Hawkeye", real:"Clint Barton", aff:"avengers", color:"var(--avengers)",
+    movie:"Thor (2011)", movies:["Thor (2011)","The Avengers (2012)","Avengers: Age of Ultron (2015)","Captain America: Civil War (2016)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"World-class marksman who never misses — a S.H.I.E.L.D. agent whose only power is a bow, a quiver, and total precision.",
+    icon:"target"},
+  {name:"Spider-Man", real:"Peter Parker", aff:"avengers", color:"var(--avengers)",
+    movie:"Captain America: Civil War (2016)", movies:["Captain America: Civil War (2016)","Spider-Man: Homecoming (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Spider-Man: Far From Home (2019)","Spider-Man: No Way Home (2021)"],
+    power:"Bitten by a radioactive spider — wall-crawling, super-agility, and a 'spider-sense' that warns of danger before it hits.",
+    icon:"web"},
+  {name:"Doctor Strange", real:"Stephen Strange", aff:"avengers", color:"var(--avengers)",
+    movie:"Doctor Strange (2016)", movies:["Doctor Strange (2016)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Spider-Man: No Way Home (2021)","Doctor Strange in the Multiverse of Madness (2022)"],
+    power:"Master of the mystic arts — spell-casting, astral projection, and command over time and dimensions via the Eye of Agamotto.",
+    icon:"portal"},
+  {name:"Black Panther", real:"T'Challa", aff:"avengers", color:"var(--avengers)",
+    movie:"Captain America: Civil War (2016)", movies:["Captain America: Civil War (2016)","Black Panther (2018)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"Wakandan king powered by the heart-shaped herb — enhanced strength and senses inside a nearly indestructible vibranium suit.",
+    icon:"claw"},
+  {name:"Captain Marvel", real:"Carol Danvers", aff:"avengers", color:"var(--avengers)",
+    movie:"Captain Marvel (2019)", movies:["Captain Marvel (2019)","Avengers: Endgame (2019)","The Marvels (2023)"],
+    power:"Kree-human hybrid who channels photon energy — flight, super-strength, and energy blasts fired straight from her fists.",
+    icon:"star"},
+  {name:"Ant-Man", real:"Scott Lang", aff:"avengers", color:"var(--avengers)",
+    movie:"Ant-Man (2015)", movies:["Ant-Man (2015)","Captain America: Civil War (2016)","Ant-Man and the Wasp (2018)","Avengers: Endgame (2019)","Ant-Man and the Wasp: Quantumania (2023)"],
+    power:"A Pym Particle suit shrinks him to insect size or grows him to giant height, with strength unaffected by the size change.",
+    icon:"orbit"},
+  {name:"Scarlet Witch", real:"Wanda Maximoff", aff:"avengers", color:"var(--avengers)",
+    movie:"Avengers: Age of Ultron (2015)", movies:["Avengers: Age of Ultron (2015)","Captain America: Civil War (2016)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Doctor Strange in the Multiverse of Madness (2022)"],
+    power:"Chaos magic user with reality-warping power — telekinesis, mind manipulation, and one of the strongest forces in the universe.",
+    icon:"chaos"},
+  {name:"Vision", real:"Vision", aff:"avengers", color:"var(--avengers)",
+    movie:"Avengers: Age of Ultron (2015)", movies:["Avengers: Age of Ultron (2015)","Captain America: Civil War (2016)","Avengers: Infinity War (2018)"],
+    power:"Synthetic being powered by the Mind Stone — density manipulation, flight, and a solar-powered energy beam.",
+    icon:"stone"},
+  {name:"Falcon", real:"Sam Wilson", aff:"avengers", color:"var(--avengers)",
+    movie:"Captain America: The Winter Soldier (2014)", movies:["Captain America: The Winter Soldier (2014)","Avengers: Age of Ultron (2015)","Captain America: Civil War (2016)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"Former PJ pararescueman equipped with a mechanical wing-suit — high-speed flight and aerial combat expertise.",
+    icon:"wing"},
+  {name:"Winter Soldier", real:"Bucky Barnes", aff:"avengers", color:"var(--avengers)",
+    movie:"Captain America: The Winter Soldier (2014)", movies:["Captain America: The Winter Soldier (2014)","Captain America: Civil War (2016)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"Super-soldier serum plus a vibranium cybernetic arm — enhanced strength honed by decades as a covert assassin.",
+    icon:"gear"},
+
+  {name:"Wolverine", real:"James 'Logan' Howlett", aff:"xmen", color:"var(--xmen)",
+    movie:"X-Men (2000)", movies:["X-Men (2000)","X2 (2003)","X-Men: The Last Stand (2006)","X-Men Origins: Wolverine (2009)","The Wolverine (2013)","X-Men: Days of Future Past (2014)","Logan (2017)","Deadpool & Wolverine (2024)"],
+    power:"Rapid cellular healing factor and retractable adamantium claws — nearly impossible to kill, permanently furious about it.",
+    icon:"claws"},
+  {name:"Professor X", real:"Charles Xavier", aff:"xmen", color:"var(--xmen)",
+    movie:"X-Men (2000)", movies:["X-Men (2000)","X2 (2003)","X-Men: The Last Stand (2006)","X-Men: First Class (2011)","X-Men: Days of Future Past (2014)","X-Men: Apocalypse (2016)","Dark Phoenix (2019)"],
+    power:"The world's most powerful telepath — mind-reading, memory control, and psychic link to every mutant on Earth via Cerebro.",
+    icon:"cerebro"},
+  {name:"Magneto", real:"Max Eisenhardt / Erik Lehnsherr", aff:"xmen", color:"var(--xmen)",
+    movie:"X-Men (2000)", movies:["X-Men (2000)","X2 (2003)","X-Men: The Last Stand (2006)","X-Men: First Class (2011)","X-Men: Days of Future Past (2014)","X-Men: Apocalypse (2016)","Dark Phoenix (2019)"],
+    power:"Absolute mastery over magnetism and metal — can bend steel, deflect bullets, and rip a stadium out of the ground.",
+    icon:"helmet"},
+  {name:"Storm", real:"Ororo Munroe", aff:"xmen", color:"var(--xmen)",
+    movie:"X-Men (2000)", movies:["X-Men (2000)","X2 (2003)","X-Men: The Last Stand (2006)","X-Men: Days of Future Past (2014)","X-Men: Apocalypse (2016)","Dark Phoenix (2019)"],
+    power:"Weather-manipulating mutant — summons lightning, hurricane winds, and blizzards, and rides the wind in flight.",
+    icon:"cloud"},
+  {name:"Jean Grey", real:"Jean Grey", aff:"xmen", color:"var(--xmen)",
+    movie:"X-Men (2000)", movies:["X-Men (2000)","X2 (2003)","X-Men: The Last Stand (2006)","X-Men: First Class (2011) (archive)","X-Men: Apocalypse (2016)","Dark Phoenix (2019)"],
+    power:"Telepath and telekinetic whose power can spiral into the cosmic, world-ending Phoenix Force.",
+    icon:"phoenix"},
+  {name:"Cyclops", real:"Scott Summers", aff:"xmen", color:"var(--xmen)",
+    movie:"X-Men (2000)", movies:["X-Men (2000)","X2 (2003)","X-Men: The Last Stand (2006)","X-Men: Apocalypse (2016)","Dark Phoenix (2019)"],
+    power:"Fires concussive optic blasts from his eyes, kept in check only by a ruby-quartz visor.",
+    icon:"visor"},
+  {name:"Mystique", real:"Raven Darkholme", aff:"xmen", color:"var(--xmen)",
+    movie:"X-Men (2000)", movies:["X-Men (2000)","X2 (2003)","X-Men: The Last Stand (2006)","X-Men: First Class (2011)","X-Men: Days of Future Past (2014)","X-Men: Apocalypse (2016)","Dark Phoenix (2019)"],
+    power:"Perfect shapeshifter — can mimic the appearance, voice, and mannerisms of anyone on sight.",
+    icon:"morph"},
+  {name:"Deadpool", real:"Wade Wilson", aff:"xmen", color:"var(--xmen)",
+    movie:"Deadpool (2016)", movies:["Deadpool (2016)","Deadpool 2 (2018)","Deadpool & Wolverine (2024)"],
+    power:"Weaponized healing factor makes him almost unkillable — a katana-wielding mercenary fully aware he's in a movie.",
+    icon:"crosshair"},
+
+  {name:"Star-Lord", real:"Peter Quill", aff:"guardians", color:"var(--guardians)",
+    movie:"Guardians of the Galaxy (2014)", movies:["Guardians of the Galaxy (2014)","Guardians of the Galaxy Vol. 2 (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Guardians of the Galaxy Vol. 3 (2023)"],
+    power:"Half-Celestial outlaw with jet boots and twin element guns — charisma over raw power, most of the time.",
+    icon:"mask"},
+  {name:"Gamora", real:"Gamora", aff:"guardians", color:"var(--guardians)",
+    movie:"Guardians of the Galaxy (2014)", movies:["Guardians of the Galaxy (2014)","Guardians of the Galaxy Vol. 2 (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Guardians of the Galaxy Vol. 3 (2023)"],
+    power:"Cybernetically enhanced assassin, trained by Thanos to be 'the deadliest woman in the galaxy.'",
+    icon:"blade"},
+  {name:"Drax", real:"Drax the Destroyer", aff:"guardians", color:"var(--guardians)",
+    movie:"Guardians of the Galaxy (2014)", movies:["Guardians of the Galaxy (2014)","Guardians of the Galaxy Vol. 2 (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Guardians of the Galaxy Vol. 3 (2023)"],
+    power:"Near-invulnerable warrior of immense physical strength, sworn to avenge his slaughtered family.",
+    icon:"axe"},
+  {name:"Rocket", real:"Rocket Raccoon", aff:"guardians", color:"var(--guardians)",
+    movie:"Guardians of the Galaxy (2014)", movies:["Guardians of the Galaxy (2014)","Guardians of the Galaxy Vol. 2 (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Guardians of the Galaxy Vol. 3 (2023)"],
+    power:"Genetically and cybernetically engineered tactician — a weapons expert with a short fuse and a bigger brain than anyone realizes.",
+    icon:"wrench"},
+  {name:"Groot", real:"Groot", aff:"guardians", color:"var(--guardians)",
+    movie:"Guardians of the Galaxy (2014)", movies:["Guardians of the Galaxy (2014)","Guardians of the Galaxy Vol. 2 (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Guardians of the Galaxy Vol. 3 (2023)"],
+    power:"Sentient tree-being who can regenerate from a single splinter and grow, stretch, or harden his body at will.",
+    icon:"sprout"},
+  {name:"Mantis", real:"Mantis", aff:"guardians", color:"var(--guardians)",
+    movie:"Guardians of the Galaxy Vol. 2 (2017)", movies:["Guardians of the Galaxy Vol. 2 (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)","Guardians of the Galaxy Vol. 3 (2023)"],
+    power:"Empathic touch-telepath who can sense and manipulate others' emotions, even lulling them to sleep.",
+    icon:"antenna"},
+
+  {name:"Thanos", real:"Thanos", aff:"villain", color:"var(--villain)",
+    movie:"The Avengers (2012, cameo)", movies:["The Avengers (2012, cameo)","Guardians of the Galaxy (2014, cameo)","Avengers: Age of Ultron (2015, cameo)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"Titan warlord of immense natural strength, made near-omnipotent when wielding the complete Infinity Gauntlet.",
+    icon:"gauntlet"},
+  {name:"Loki", real:"Loki Laufeyson", aff:"villain", color:"var(--villain)",
+    movie:"Thor (2011)", movies:["Thor (2011)","The Avengers (2012)","Thor: The Dark World (2013)","Thor: Ragnarok (2017)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"Asgardian god of mischief — illusion casting, shapeshifting, and battle magic, all in service of the long con.",
+    icon:"twin"},
+  {name:"Ultron", real:"Ultron", aff:"villain", color:"var(--villain)",
+    movie:"Avengers: Age of Ultron (2015)", movies:["Avengers: Age of Ultron (2015)"],
+    power:"Self-aware A.I. that can occupy any networked machine or synthetic body, endlessly rebuilding itself.",
+    icon:"circuit"},
+  {name:"Killmonger", real:"N'Jadaka / Erik Stevens", aff:"villain", color:"var(--villain)",
+    movie:"Black Panther (2018)", movies:["Black Panther (2018)"],
+    power:"Black-ops-trained soldier who takes the heart-shaped herb himself, matching the Black Panther suit's full power.",
+    icon:"scar"},
+  {name:"Green Goblin", real:"Norman Osborn", aff:"villain", color:"var(--villain)",
+    movie:"Spider-Man: No Way Home (2021)", movies:["Spider-Man: No Way Home (2021)"],
+    power:"Formula-enhanced strength and a glider-and-pumpkin-bomb arsenal, hiding a fractured, dangerous mind underneath.",
+    icon:"pumpkin"},
+  {name:"Red Skull", real:"Johann Schmidt", aff:"villain", color:"var(--villain)",
+    movie:"Captain America: The First Avenger (2011)", movies:["Captain America: The First Avenger (2011)","Avengers: Infinity War (2018)","Avengers: Endgame (2019)"],
+    power:"An early, unstable dose of super-soldier serum gave him strength and cunning — and a permanently skull-red face.",
+    icon:"skull"},
+];
+
+/* ============ ICONS (inline SVG, generated — not photos) ============ */
+function emblemSVG(key){
+  const icons = {
+    arc: `<circle cx="50" cy="50" r="26" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="50" cy="50" r="14" fill="currentColor" opacity="0.85"/><circle cx="50" cy="50" r="6" fill="var(--bg-panel)"/>`,
+    shield: `<circle cx="50" cy="50" r="30" fill="currentColor" opacity="0.15"/><circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="8" fill="currentColor"/>`,
+    bolt: `<path d="M55 15 L30 55 H48 L42 85 L72 42 H52 Z" fill="currentColor"/>`,
+    burst: `<path d="M50 12 L58 40 L86 40 L63 57 L72 85 L50 68 L28 85 L37 57 L14 40 L42 40 Z" fill="currentColor" opacity="0.9"/>`,
+    hourglass: `<path d="M28 18 H72 L50 50 L72 82 H28 L50 50 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>`,
+    target: `<circle cx="50" cy="50" r="28" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="17" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="6" fill="currentColor"/>`,
+    web: `<g stroke="currentColor" stroke-width="2.2" fill="none"><path d="M50 8 V92 M8 50 H92 M18 18 L82 82 M82 18 L18 82"/><circle cx="50" cy="50" r="15"/><circle cx="50" cy="50" r="27"/><circle cx="50" cy="50" r="39"/></g>`,
+    portal: `<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M50 20 V80 M20 50 H80" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>`,
+    claw: `<path d="M30 25 L38 75 M50 20 L50 78 M70 25 L62 75" stroke="currentColor" stroke-width="6" stroke-linecap="round" fill="none"/>`,
+    star: `<path d="M50 12 L61 40 L91 42 L67 61 L76 90 L50 72 L24 90 L33 61 L9 42 L39 40 Z" fill="currentColor"/>`,
+    orbit: `<circle cx="50" cy="50" r="10" fill="currentColor"/><ellipse cx="50" cy="50" rx="38" ry="16" fill="none" stroke="currentColor" stroke-width="3"/><ellipse cx="50" cy="50" rx="16" ry="38" fill="none" stroke="currentColor" stroke-width="3" opacity="0.6"/>`,
+    chaos: `<path d="M50 10 C70 30 70 70 50 90 C30 70 30 30 50 10 Z" fill="currentColor" opacity="0.85"/><circle cx="50" cy="50" r="8" fill="var(--bg-panel)"/>`,
+    stone: `<path d="M50 15 L75 50 L50 85 L25 50 Z" fill="currentColor" opacity="0.9"/><path d="M50 30 L65 50 L50 70 L35 50 Z" fill="var(--bg-panel)"/>`,
+    wing: `<path d="M15 60 Q45 20 50 15 Q55 20 85 60 Q60 50 50 65 Q40 50 15 60 Z" fill="currentColor" opacity="0.9"/>`,
+    gear: `<circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" stroke-width="4"/><g stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M50 20 V30 M50 70 V80 M20 50 H30 M70 50 H80 M28 28 L35 35 M65 65 L72 72 M72 28 L65 35 M35 65 L28 72"/></g>`,
+    claws: `<path d="M25 20 L35 80 M50 15 L50 85 M75 20 L65 80" stroke="currentColor" stroke-width="7" stroke-linecap="round" fill="none"/>`,
+    cerebro: `<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="3"/><path d="M50 20 A30 30 0 0 1 50 80" fill="none" stroke="currentColor" stroke-width="2" opacity="0.6"/><circle cx="50" cy="50" r="5" fill="currentColor"/>`,
+    helmet: `<path d="M30 60 Q30 25 50 15 Q70 25 70 60 L60 60 Q60 35 50 30 Q40 35 40 60 Z" fill="currentColor" opacity="0.9"/>`,
+    cloud: `<path d="M30 60 Q20 60 20 48 Q20 38 32 38 Q35 22 52 22 Q68 22 70 38 Q82 38 82 50 Q82 60 70 60 Z" fill="currentColor" opacity="0.85"/><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M35 70 L30 80 M50 70 L45 82 M65 70 L60 80"/></g>`,
+    phoenix: `<path d="M50 15 Q70 30 65 55 Q85 50 80 30 Q95 55 70 75 Q80 85 50 90 Q20 85 30 75 Q5 55 20 30 Q15 50 35 55 Q30 30 50 15 Z" fill="currentColor" opacity="0.85"/>`,
+    visor: `<rect x="20" y="42" width="60" height="16" rx="8" fill="currentColor" opacity="0.9"/>`,
+    morph: `<path d="M50 15 A35 35 0 1 1 49.9 15" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="6 6"/><circle cx="50" cy="50" r="10" fill="currentColor"/>`,
+    crosshair: `<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="3"/><path d="M50 8 V25 M50 75 V92 M8 50 H25 M75 50 H92" stroke="currentColor" stroke-width="3"/>`,
+    mask: `<path d="M20 45 Q20 20 50 20 Q80 20 80 45 Q80 70 50 85 Q20 70 20 45 Z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="3"/><circle cx="38" cy="45" r="7" fill="currentColor"/><circle cx="62" cy="45" r="7" fill="currentColor"/>`,
+    blade: `<path d="M50 10 L58 60 L50 90 L42 60 Z" fill="currentColor" opacity="0.9"/>`,
+    axe: `<path d="M35 20 Q20 20 20 35 Q20 48 35 48 L48 48 L48 85 L56 85 L56 48 L65 48 Q80 48 80 35 Q80 20 65 20 Z" fill="currentColor" opacity="0.85"/>`,
+    wrench: `<path d="M65 20 A18 18 0 1 0 78 42 L50 70 L30 90 L15 75 L35 55 L58 33 A18 18 0 0 0 65 20 Z" fill="currentColor" opacity="0.85"/>`,
+    sprout: `<path d="M50 90 V45" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M50 55 Q30 50 25 30 Q45 30 50 50 Q55 30 75 30 Q70 50 50 55 Z" fill="currentColor" opacity="0.85"/>`,
+    antenna: `<circle cx="50" cy="55" r="22" fill="currentColor" opacity="0.85"/><path d="M40 35 Q35 15 25 12 M60 35 Q65 15 75 12" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    gauntlet: `<path d="M30 45 L30 30 Q30 22 38 22 L62 22 Q70 22 70 30 L70 45 L75 70 Q75 85 50 88 Q25 85 25 70 Z" fill="currentColor" opacity="0.85"/><circle cx="40" cy="40" r="4" fill="var(--bg-panel)"/><circle cx="50" cy="36" r="4" fill="var(--bg-panel)"/><circle cx="60" cy="40" r="4" fill="var(--bg-panel)"/>`,
+    twin: `<path d="M35 20 L35 80 M65 20 L65 80" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M35 50 Q50 35 65 50 Q50 65 35 50" fill="currentColor" opacity="0.6"/>`,
+    circuit: `<rect x="30" y="30" width="40" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="30" cy="30" r="4" fill="currentColor"/><circle cx="70" cy="30" r="4" fill="currentColor"/><circle cx="30" cy="70" r="4" fill="currentColor"/><circle cx="70" cy="70" r="4" fill="currentColor"/><circle cx="50" cy="50" r="6" fill="currentColor"/>`,
+    scar: `<path d="M25 30 L75 30 L60 55 L75 80 L25 80 L40 55 Z" fill="currentColor" opacity="0.8"/>`,
+    pumpkin: `<circle cx="50" cy="55" r="28" fill="currentColor" opacity="0.85"/><path d="M50 27 Q45 15 50 10 Q55 15 50 27" stroke="currentColor" stroke-width="4" fill="none"/><path d="M38 50 L44 58 L38 66 M62 50 L56 58 L62 66" stroke="var(--bg-panel)" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    skull: `<circle cx="50" cy="42" r="26" fill="currentColor" opacity="0.9"/><circle cx="40" cy="40" r="6" fill="var(--bg-panel)"/><circle cx="60" cy="40" r="6" fill="var(--bg-panel)"/><path d="M42 58 L50 66 L58 58" stroke="var(--bg-panel)" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+  };
+  return icons[key] || icons.star;
+}
+
+const AFF_LABEL = {avengers:"Avengers", xmen:"X-Men", guardians:"Guardians", villain:"Villain"};
+
+/* ============ RENDER ============ */
+const grid = document.getElementById('grid');
+const searchInput = document.getElementById('search');
+const filtersEl = document.getElementById('filters');
+const countTag = document.getElementById('count-tag');
+let activeFilter = 'all';
+
+function buildFilters(){
+  const cats = [
+    {key:'all', label:'All Files', color:'var(--ink)'},
+    {key:'avengers', label:'Avengers', color:'var(--avengers)'},
+    {key:'xmen', label:'X-Men', color:'var(--xmen)'},
+    {key:'guardians', label:'Guardians', color:'var(--guardians)'},
+    {key:'villain', label:'Villains', color:'var(--villain)'},
+  ];
+  filtersEl.innerHTML = cats.map(c =>
+    `<button class="chip ${c.key==='all'?'active':''}" data-key="${c.key}" style="--chip-color:${c.color}">${c.label}</button>`
+  ).join('');
+  filtersEl.querySelectorAll('.chip').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      filtersEl.querySelectorAll('.chip').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.key;
+      render();
+    });
+  });
+}
+
+function matches(c, q){
+  if(activeFilter !== 'all' && c.aff !== activeFilter) return false;
+  if(!q) return true;
+  const hay = (c.name+' '+c.real+' '+c.movie+' '+c.movies.join(' ')+' '+c.power).toLowerCase();
+  return hay.includes(q);
+}
+
+function cardHTML(c, i){
+  return `
+  <div class="card" tabindex="0" style="--card-color:${c.color}" data-idx="${i}">
+    <div class="card-top">
+      <div class="halftone"></div>
+      <div class="issue-tag">FILE №${String(i+1).padStart(3,'0')}</div>
+      <div class="aff-tag">${AFF_LABEL[c.aff]}</div>
+      <svg class="emblem" viewBox="0 0 100 100" style="color:${c.color}">${emblemSVG(c.icon)}</svg>
+    </div>
+    <div class="card-body">
+      <div class="name">${c.name}</div>
+      <div class="real-name">${c.real}</div>
+      <div class="power-line">${c.power}</div>
+      <div class="movie-tag">🎬 ${c.movie}</div>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const q = searchInput.value.trim().toLowerCase();
+  const filtered = CHARACTERS.map((c,i)=>({c,i})).filter(({c})=>matches(c,q));
+
+  if(filtered.length === 0){
+    grid.innerHTML = `<div class="empty-state"><div class="big">No files found</div>Try a different name or clear the search.</div>`;
+  } else {
+    grid.innerHTML = filtered.map(({c,i})=>cardHTML(c,i)).join('');
+  }
+  countTag.textContent = `${filtered.length} / ${CHARACTERS.length} files`;
+
+  grid.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click', ()=>openModal(parseInt(card.dataset.idx)));
+    card.addEventListener('keydown', e=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); openModal(parseInt(card.dataset.idx)); }
+    });
+  });
+}
+
+function updateStats(){
+  document.getElementById('stat-av').textContent = CHARACTERS.filter(c=>c.aff==='avengers').length;
+  document.getElementById('stat-xm').textContent = CHARACTERS.filter(c=>c.aff==='xmen').length;
+  document.getElementById('stat-gu').textContent = CHARACTERS.filter(c=>c.aff==='guardians').length;
+  document.getElementById('stat-vi').textContent = CHARACTERS.filter(c=>c.aff==='villain').length;
+}
+
+/* ============ MODAL ============ */
+const overlay = document.getElementById('overlay');
+const modal = document.getElementById('modal');
+
+function openModal(idx){
+  const c = CHARACTERS[idx];
+  modal.style.setProperty('--card-color', c.color);
+  modal.innerHTML = `
+    <div class="modal-hero">
+      <div class="halftone"></div>
+      <div class="modal-aff">${AFF_LABEL[c.aff]}</div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+      <svg class="emblem" viewBox="0 0 100 100" style="color:${c.color}">${emblemSVG(c.icon)}</svg>
+    </div>
+    <div class="modal-body">
+      <div class="modal-name">${c.name}</div>
+      <div class="modal-real">AKA ${c.real}</div>
+
+      <div class="field">
+        <div class="field-label">Powers &amp; Abilities</div>
+        <div class="field-value">${c.power}</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Screen Debut</div>
+        <div class="field-value">${c.movie}</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Filmography (${c.movies.length})</div>
+        <div class="movie-list">
+          ${c.movies.map(m=>`<span class="movie-chip">${m}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+overlay.addEventListener('click', e=>{ if(e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+/* ============ INIT ============ */
+buildFilters();
+updateStats();
+render();
+searchInput.addEventListener('input', render);
+</script>
+
+</body>
+</html>

@@ -36,7 +36,7 @@ Object.defineProperty(hey, "age", {
 
 for (let [key, value] of Object.entries(hey)) {
     if (typeof value !== "function") { // an value is equal to function (!==).
-                console.log(`${key}: ${value}`);
+                console.log(`${key} ${value}`);
     }
 }
 
