@@ -1,4 +1,4 @@
-##use rudra;
+```sql use rudra;
 select * from rudradata;
 select * from studentdata;
 
@@ -36,6 +36,7 @@ SELECT * FROM STUDENTDATA WHERE NAME iN ('RUDRA','AMIT','RAVAN');
 
 alter TABLE studentdata ADD column PRICE INT;
 ALTER TABLE studentdata DROP column AGE;
+
 UPDATE studentdata SET price = 125488786 WHERE id = 1;
 UPDATE studentdata SET price = 75412 WHERE id = 2;
 UPDATE studentdata SET price = 50000 WHERE id = 3;
@@ -46,7 +47,7 @@ UPDATE studentdata SET price = 45000 WHERE id = 7;
 UPDATE studentdata SET price = 85000 WHERE id = 8;
 UPDATE studentdata SET price = 120000 WHERE id = 9;
 UPDATE studentdata SET price = 65000 WHERE id = 10;
+
 select *from studentdata where price between 50000 and 120000;
 
-
-##
+```
