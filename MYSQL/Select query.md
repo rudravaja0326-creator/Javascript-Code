@@ -1,0 +1,22 @@
+## USE RUDRA;
+CREATE TABLE RUDRADATA(
+ID INT PRIMARY KEY,
+NAME varchar(25) NOT NULL,
+CUSTOMERNAME VARCHAR(19) NOT NULL
+);
+
+INSERT INTO RUDRADATA VALUES(1,'RUDRA','VAJA');
+SELECT * FROM RUDRADATA;
+
+INSERT INTO RUDRADATA(NAME,ID,CUSTOMERNAME)VALUES
+('INOSUKE',3,'HASHIBIRA');
+
+
+SELECT NAME ,CUSTOMERNAME FROM RUDRADATA;
+
+select customername from rudradata;
+
+select id , name from rudradata;
+
+select * from rudradata where name = 'rudra' and id = 2;
+##
