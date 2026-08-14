@@ -1,4 +1,5 @@
-```sql use rudra;
+```sql 
+use rudra;
 select * from rudradata;
 select * from studentdata;
 
