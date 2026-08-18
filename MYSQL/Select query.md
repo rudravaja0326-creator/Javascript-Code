@@ -182,3 +182,15 @@ inner join marks
 on students.id = marks.student_id;
 ```
 
+
+# Advance SQl
+``` sql 
+use querys;
+select *from sqlqr;
+
+	select name , marks , depatment , id
+	from sqlqr
+	where marks > all(select marks from sqlqr where depatment='hr');
+
+
+```
